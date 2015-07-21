@@ -26,12 +26,12 @@ SZX=$(opj_dump -i $IN | grep "x1=" | awk -F '[,=]' '{print $2}')
 SZY=$(opj_dump -i $IN | grep "x1=" | awk -F '[,=]' '{print $4}')
 
 # alternative way to get the image size, using the DIM*.XML file
-DIM=${IMG/IMG/DIM}  # replace 'IMG' by 'DIM' in the filename
-DIM=${DIM/JP2/XML}  # replace 'JP2' by 'XML' in the filename
-DIM=${DIM/_R1C1/}  # remove '_R1C1' from the filenmae
-SZX=`cat $DIR/$DIM | grep NCOLS | cut -f2 -d'>' | cut -f1 -d'<'`
-SZY=`cat $DIR/$DIM | grep NROWS | cut -f2 -d'>' | cut -f1 -d'<'`
-echo $SZX $SZY
+# DIM=${IMG/IMG/DIM}  # replace 'IMG' by 'DIM' in the filename
+# DIM=${DIM/JP2/XML}  # replace 'JP2' by 'XML' in the filename
+# DIM=${DIM/_R1C1/}  # remove '_R1C1' from the filenmae
+# SZX=`cat $DIR/$DIM | grep NCOLS | cut -f2 -d'>' | cut -f1 -d'<'`
+# SZY=`cat $DIR/$DIM | grep NROWS | cut -f2 -d'>' | cut -f1 -d'<'`
+# echo $SZX $SZY
 
 # compute the image pyramid
 for i in {1..5}; do

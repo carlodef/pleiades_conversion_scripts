@@ -11,7 +11,7 @@ DZI=${TIF%%.*}.16BITS.dzi
 vips linear $TIF $TIF.v 4096 0
 
 # dzi file generation
-vips dzsave $TIF.v $DZI
+vips dzsave $TIF.v $DZI --suffix=.png
 
 # cleanup
 rm $TIF.v

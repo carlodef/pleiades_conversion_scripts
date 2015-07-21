@@ -20,7 +20,7 @@ SZY=$(opj_dump -i $IN | grep "x1=" | awk -F '[,=]' '{print $4}')
 # rm $tmp
 
 # convert the image to tiled TIF (bigtiff if safer) with OTB
-otbcli_ExtractROI -ram 4000 -startx 0 -starty 0 -sizex $SZX -sizey $SZY -in $IN -out "$OUT?&gdal:co:TILED=YES&gdal:co:COMPRESS=DEFLATE&gdal:co:PREDICTOR=2&gdal:co:BIGTIFF=IF_SAFER&gdal:co:PROFILE=GDALGeoTIFF" uint16
+otbcli_ExtractROI -ram 4000 -startx 0 -starty 0 -sizex $SZX -sizey $SZY -in $IN -out "$OUT?writegeom=false&gdal:co:TILED=YES&gdal:co:COMPRESS=DEFLATE&gdal:co:PREDICTOR=2&gdal:co:BIGTIFF=IF_SAFER&gdal:co:PROFILE=GDALGeoTIFF" uint16
 
 # alternative with opj_decompress (produces single tile TIF)
 # opj_decompress -i $IN -o "$OUT.TMP.TIF"

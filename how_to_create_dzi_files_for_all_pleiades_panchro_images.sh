@@ -16,22 +16,33 @@
 # For each image, copy it locally, create the dzi image then copy the dzi image
 # to the nas with a tarpipe
 TMP=$HOME/tmp
-for path in $(cat list_pleiades_panchro_images_on_the_nas.txt); do
-    directory=/home/carlo/nas/`dirname $path`
-    file=`basename $path`
+for tif in $(cat list_pleiades_panchro_images_on_the_nas.txt); do
+
+    # useful paths
+    nas_dir=$HOME/nas/`dirname $tif`
+    file=`basename $tif`
     dzi=${file%%.*}.dzi
     dzi_files=${file%%.*}_files
-    #echo $path
-    #echo $directory
-    #echo $file
-    #echo $dzi
-    #echo $dzi_files
-    rsync -P $directory/$file $TMP
-    /bin/bash code/pleiades_conversion_scripts/create_dzi_from_tiff.sh $TMP/$file
-    cp $TMP/$dzi $directory
-    cd $TMP
-    tar c $dzi_files | ssh nas "cd /volume1/`dirname $path`; tar --warning=no-timestamp -xf -"
-    rm $HOME/tmp/$file
-    rm $HOME/tmp/$dzi
-    rm -r $HOME/tmp/$dzi_files
+
+    # if the dzi file does not exist
+    if [ -s $nas_dir/$dzi ]; then
+        echo $nas_dir/$dzi "already exists, skip"
+    else
+        # copy the tif image locally
+        rsync -P $nas_dir/$file $TMP
+
+        # do the job
+        /bin/bash code/pleiades_conversion_scripts/create_dzi_from_tiff.sh $TMP/$file
+
+        # move the output back to the nas
+        cp $TMP/$dzi $nas_dir
+        cd $TMP
+        tar c $dzi_files | ssh nas "cd /volume1/`dirname $tif`; tar --warning=no-timestamp -xf -"
+        cd -
+
+        # cleanup
+        rm $HOME/tmp/$file
+        rm $HOME/tmp/$dzi
+        rm -r $HOME/tmp/$dzi_files
+    fi
 done

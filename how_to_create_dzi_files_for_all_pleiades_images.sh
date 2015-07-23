@@ -11,28 +11,31 @@
 
 # list the Pléiades panchro images we have
 # cd $HOME
-# find nas/pleiades/satellite_images/pleiades -name "*_P_*.JP2.TIF" | grep -v "napier.broken" > list_pleiades_panchro_images_on_the_nas.txt
+# find nas/pleiades/satellite_images/pleiades -name "*.JP2.TIF" | grep -v "napier.broken" > list_pleiades_images_on_the_nas.txt
+
+LIST_OF_PATHS_TO_TIFF=$1
+TMP=$HOME/tmp
 
 # For each image, copy it locally, create the dzi image then copy the dzi image
 # to the nas with a tarpipe
-TMP=$HOME/tmp
-for tif in $(cat list_pleiades_panchro_images_on_the_nas.txt); do
+for tif in $(cat $LIST_OF_PATHS_TO_TIFF); do
+    echo $tif
 
     # useful paths
     nas_dir=$HOME/nas/`dirname $tif`
     file=`basename $tif`
-    dzi=${file%%.*}.dzi
-    dzi_files=${file%%.*}_files
+    dzi=${file%%.*}_16BITS.dzi
+    dzi_files=${file%%.*}_16BITS_files
 
-    # if the dzi file does not exist
+    # if the dzi file exists, skip
     if [ -s $nas_dir/$dzi ]; then
-        echo $nas_dir/$dzi "already exists, skip"
+        echo "already exists, skip"
     else
         # copy the tif image locally
         rsync -P $nas_dir/$file $TMP
 
         # do the job
-        /bin/bash code/pleiades_conversion_scripts/create_dzi_from_tiff.sh $TMP/$file
+        /bin/bash code/pleiades_conversion_scripts/create_16bits_dzi_from_tiff.sh $TMP/$file
 
         # move the output back to the nas
         cp $TMP/$dzi $nas_dir

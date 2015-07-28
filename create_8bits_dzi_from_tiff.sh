@@ -2,7 +2,7 @@
 
 # input TIF file, output DZI file
 TIF=$1
-DZI=${TIF%%.*}.dzi
+DZI=${TIF%%.*}_8BITS.dzi
 
 # gamma correction and simplest color balance to 8 bits with otbcli_Convert
 UINT=${TIF%%.*}.UINT8.TIF

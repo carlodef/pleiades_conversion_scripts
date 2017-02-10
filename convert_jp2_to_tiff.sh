@@ -9,8 +9,8 @@ IN=$1
 OUT=$2
 
 # get the image size with opj_dump
-SZX=$(opj_dump -i $IN | grep "x1=" | awk -F '[,=]' '{print $2}')
-SZY=$(opj_dump -i $IN | grep "x1=" | awk -F '[,=]' '{print $4}')
+SZX=$(opj_dump -i $IN | awk -F '[,=]' '/x1=/ {print $2}')
+SZY=$(opj_dump -i $IN | awk -F '[,=]' '/x1=/ {print $4}')
 
 # alternative with 'identify' from imagemagick (very slow)
 # tmp=$(tempfile)

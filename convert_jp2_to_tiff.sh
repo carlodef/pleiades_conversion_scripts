@@ -9,8 +9,8 @@ IN=$1
 OUT=$2
 
 # get the image size with opj_dump
-SZX=$(opj_dump -i $IN | awk -F '[,=]' '/x1=/ {print $2}')
-SZY=$(opj_dump -i $IN | awk -F '[,=]' '/x1=/ {print $4}')
+#SZX=$(opj_dump -i $IN | awk -F '[,=]' '/x1=/ {print $2}')
+#SZY=$(opj_dump -i $IN | awk -F '[,=]' '/x1=/ {print $4}')
 
 # alternative with 'identify' from imagemagick (very slow)
 # tmp=$(tempfile)
@@ -20,10 +20,11 @@ SZY=$(opj_dump -i $IN | awk -F '[,=]' '/x1=/ {print $4}')
 # rm $tmp
 
 # convert the image to tiled TIF (bigtiff if safer) with OTB
-otbcli_ExtractROI -ram 4000 -startx 0 -starty 0 -sizex $SZX -sizey $SZY -in $IN -out "$OUT?writegeom=false&gdal:co:TILED=YES&gdal:co:COMPRESS=DEFLATE&gdal:co:PREDICTOR=2&gdal:co:BIGTIFF=IF_SAFER&gdal:co:PROFILE=GDALGeoTIFF" uint16
+#otbcli_ExtractROI -ram 4000 -startx 0 -starty 0 -sizex $SZX -sizey $SZY -in $IN -out "$OUT?writegeom=false&gdal:co:TILED=YES&gdal:co:COMPRESS=DEFLATE&gdal:co:PREDICTOR=2&gdal:co:BIGTIFF=IF_SAFER&gdal:co:PROFILE=GDALGeoTIFF" uint16
 
 # alternative with gdal only
-# gdal_translate $IN $OUT -ot UInt16 -of GTiff -co "TILED=YES" -co "COMPRESS=DEFLATE" -co "PREDICTOR=2" -co "BIGTIFF=IF_SAFER" -co "PROFILE=GDALGeoTIFF"
+gdal_translate $IN $OUT -ot UInt16 -of GTiff -co "TILED=YES" -co "COMPRESS=DEFLATE" -co "PREDICTOR=2" -co "BIGTIFF=IF_SAFER" -co "PROFILE=GDALGeoTIFF"
+#gdal_translate $IN $OUT -ot UInt16 -of GTiff -co "TILED=YES" -co "BIGTIFF=IF_SAFER" -co "PROFILE=GDALGeoTIFF"
 
 # alternative with opj_decompress (produces single tile TIF)
 # opj_decompress -i $IN -o "$OUT.TMP.TIF"
